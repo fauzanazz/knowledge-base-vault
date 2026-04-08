@@ -1,64 +1,56 @@
 ---
 title: "NewSQL"
 category: database
-summary: "NewSQL databases provide both ACID guarantees and horizontal scalability, combining the consistency of traditional SQL databases with the scale-out capabilities of NoSQL systems."
+summary: "NewSQL databases combine the ACID guarantees of traditional SQL databases with the horizontal scalability of NoSQL systems, exemplified by systems like Google Spanner and CockroachDB."
 sources:
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:22:31.023Z
+  - raw/articles/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:34:00.075Z
 ---
 
 # NewSQL
 
-> NewSQL databases provide both ACID guarantees and horizontal scalability, combining the consistency of traditional SQL databases with the scale-out capabilities of NoSQL systems.
+> NewSQL databases combine the ACID guarantees of traditional SQL databases with the horizontal scalability of NoSQL systems, exemplified by systems like Google Spanner and CockroachDB.
 
 # NewSQL
 
-NewSQL databases represent a new generation of database systems that provide both [[ACID Properties]] guarantees and horizontal scalability, bridging the gap between traditional SQL and NoSQL systems.
+NewSQL represents a new generation of databases that combine the [[ACID Properties]] and strong consistency guarantees of traditional SQL databases with the horizontal scalability of NoSQL systems.
 
 ## Historical Context
 
-**Traditional SQL**: Offered ACID guarantees but limited scalability
-**NoSQL Era**: Sacrificed ACID for horizontal scalability
-**NewSQL**: Combines strong consistency with scale-out architecture
+- **SQL era**: Strong consistency but limited scalability
+- **NoSQL era**: High scalability but sacrificed ACID guarantees
+- **NewSQL era**: Both strong consistency and horizontal scalability
 
 ## Google Spanner Architecture
 
-Spanner exemplifies NewSQL design principles:
+Spanner pioneered the NewSQL approach:
 
-**Partitioning**: Breaks data into partitions for horizontal scaling
-**Replication**: Each partition replicated using [[Raft Algorithm]] (Paxos)
-**Leadership**: Each replication group has a leader handling writes
-**Locking**: Leaders implement Two-Phase Locking (2PL) for isolation
+**Partitioning**: Data is divided into partitions for horizontal scaling
 
-**Transaction Handling**:
-- Single-partition: Direct leader coordination
-- Multi-partition: [[Two-Phase Commit]] with leader as coordinator
-- Recovery: Write-Ahead Log (WAL) enables crash recovery
+**Replication**: Each partition is replicated using [[Raft Algorithm]] across multiple nodes
 
-**Concurrency Control**:
-- **MVCC**: Multi-Version Concurrency Control for read-only transactions
-- **2PL**: Two-Phase Locking for write transactions
-- **Timestamping**: Physical clocks with GPS/atomic clock synchronization
+**Transaction Processing**:
+- Leaders handle writes using state machine replication
+- [[Two-Phase Commit]] coordinates multi-partition transactions
+- [[Concurrency Control]] uses Two-Phase Locking for isolation
+- MVCC enables high-performance read-only transactions
 
-## Clock Synchronization
+**Global Consistency**: Uses synchronized physical clocks (GPS + atomic clocks) with TrueTime API to assign globally consistent timestamps
 
-Spanner's innovation lies in timestamp management:
-- Calculates maximum possible clock offset
-- Transactions wait for offset duration to ensure ordering
-- Requires highly accurate GPS and atomic clocks
+## CockroachDB Alternative
 
-## Alternative Approaches
+CockroachDB provides similar capabilities without expensive atomic clocks:
+- Uses hybrid logical clocks instead of TrueTime
+- Implements similar partitioning and replication strategies
+- More accessible for organizations without Google's infrastructure
 
-**CockroachDB**: Uses hybrid-logical clocks instead of expensive atomic clocks, making NewSQL more accessible while maintaining similar guarantees.
+## Key Innovations
 
-## Benefits
+- Combines consensus algorithms with traditional database techniques
+- Leverages precise time synchronization for global consistency
+- Demonstrates that the traditional consistency vs. scalability trade-off can be overcome
 
-- **ACID Compliance**: Full transactional guarantees
-- **Horizontal Scaling**: Partition-based architecture
-- **Strong Consistency**: Global transaction ordering
-- **SQL Interface**: Familiar query language and tools
-
-NewSQL systems demonstrate that the traditional trade-off between consistency and scalability can be overcome through sophisticated distributed systems engineering.
+NewSQL systems prove that with sufficient engineering investment, distributed systems can achieve both strong consistency and horizontal scalability.
 
 ---
-*Related: [[ACID Properties]], [[Raft Algorithm]], [[Two-Phase Commit]], [[Consistency Models]], [[Distributed Systems]]*
+*Related: [[ACID Properties]], [[Raft Algorithm]], [[Two-Phase Commit]], [[Concurrency Control]], [[Physical Clocks]]*

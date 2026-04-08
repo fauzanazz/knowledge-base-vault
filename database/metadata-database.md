@@ -1,66 +1,76 @@
 ---
 title: "Metadata Database"
 category: database
-summary: "A metadata database stores information about files, users, and system objects without containing the actual file content. It enables efficient file management, search, and organization in distributed storage systems."
+summary: "A metadata database stores structured information about files, users, and system objects in distributed storage systems. It tracks relationships, permissions, and versioning information separate from the actual file content."
 sources:
-  - raw/articles/_done/google-drive-system-design-interview-by-alex-xu-pagefy.md
-updated: 2026-04-04T09:54:34.693Z
+  - raw/articles/google-drive-system-design-interview-by-alex-xu-pagefy.md
+updated: 2026-04-08T19:07:44.992Z
 ---
 
 # Metadata Database
 
-> A metadata database stores information about files, users, and system objects without containing the actual file content. It enables efficient file management, search, and organization in distributed storage systems.
+> A metadata database stores structured information about files, users, and system objects in distributed storage systems. It tracks relationships, permissions, and versioning information separate from the actual file content.
 
 # Metadata Database
 
-A metadata database stores descriptive information about files, users, and system objects without containing the actual file content. It serves as the index and control layer for distributed storage systems.
+A metadata database stores structured information about files, users, and system objects in distributed storage systems like [[Google Drive System Design]], separate from the actual file content stored in [[Block Storage Systems]].
 
 ## Schema Design
 
-Typical metadata databases contain several core tables:
+Typical metadata database includes core tables:
 
 ### User Table
-- User profiles, preferences, and authentication data
-- Storage quotas and usage statistics
+- User profiles and authentication information
+- Storage quotas and preferences
 - Account settings and permissions
 
 ### File Table
 - File metadata: name, size, path, creation/modification timestamps
-- File type, encoding, and compression information
-- Access permissions and sharing settings
+- File status: pending, uploaded, deleted
+- Owner and permission information
+- Parent directory relationships
 
 ### Block Table
-- Individual file block information for reconstruction
-- Block hash values for [[Delta Sync]] and de-duplication
-- Storage location references (e.g., S3 bucket paths)
+- Block identifiers and hash values
+- File-to-block mappings for reconstruction
+- Block locations in distributed storage
+- Compression and encryption metadata
 
 ### File Version Table
-- Revision history and version tracking
-- Timestamps and user attribution for changes
-- Rollback capabilities and version comparison
+- Revision history for each file
+- Version timestamps and user attribution
+- Delta information between versions
+- Rollback and recovery data
 
 ## Performance Optimization
 
 ### Caching Strategy
-Frequently accessed metadata is cached using [[Caching]] systems like Redis to reduce database load and improve response times for file operations.
+- Frequently accessed metadata cached in memory
+- User session data and recent file information prioritized
+- Cache invalidation on file updates
+- Reduces database load for common operations
 
-### Sharding and Replication
-Metadata databases use [[Database Sharding]] based on user_id to distribute load across multiple servers. [[Database Replication]] ensures high availability with master-slave configurations.
+### Database Scaling
+- **[[Database Sharding]]**: Partition by user_id for horizontal scaling
+- **[[Database Replication]]**: Master-slave setup for read scaling
+- **Indexing**: Optimize queries on file paths, user ownership, and timestamps
 
-## Use Cases
+## Consistency Requirements
 
-- **File Discovery**: Enabling search and browsing without accessing file content
-- **Permission Management**: Controlling access rights and sharing capabilities
-- **Sync Coordination**: Tracking file changes across multiple devices
-- **Storage Analytics**: Monitoring usage patterns and storage optimization
+### ACID Properties
+Metadata operations require strong consistency:
+- **Atomicity**: File creation includes all related metadata
+- **Consistency**: Referential integrity between files and blocks
+- **Isolation**: Concurrent updates don't interfere
+- **Durability**: Metadata changes are permanently stored
 
-## Challenges
+### Synchronization
+Metadata updates must coordinate with file operations:
+- File upload sets status to "pending" until completion
+- S3 callbacks trigger status updates to "uploaded"
+- Notification service informed of metadata changes
 
-- **Consistency**: Maintaining metadata accuracy during concurrent file operations
-- **Scalability**: Handling billions of files and frequent metadata updates
-- **Backup and Recovery**: Ensuring metadata durability and disaster recovery
-
-Metadata databases are critical components in systems like [[Google Drive System Design]], enabling efficient file management at massive scale while keeping actual file content in separate [[Blob Storage]] systems.
+The metadata database serves as the authoritative source for file system state, enabling efficient queries while maintaining consistency across distributed storage infrastructure.
 
 ---
-*Related: [[Google Drive System Design]], [[Database Sharding]], [[Database Replication]], [[Caching]], [[Delta Sync]], [[Blob Storage]]*
+*Related: [[Google Drive System Design]], [[Database Sharding]], [[Database Replication]], [[Block Storage Systems]], [[ACID Properties]]*

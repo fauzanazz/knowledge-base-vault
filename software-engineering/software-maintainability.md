@@ -4,7 +4,7 @@ category: software-engineering
 summary: "Software maintainability encompasses the practices and principles that make systems easy to modify, extend, and operate after initial development. The majority of software costs are spent in maintenance rather than initial development."
 sources:
   - raw/articles/maintainability-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:14:19.395Z
+updated: 2026-04-08T19:11:26.755Z
 ---
 
 # Software Maintainability
@@ -19,25 +19,32 @@ Software maintainability refers to how easily a system can be modified, extended
 - Adding new features  
 - Operating the system
 
-Historically, developers, testers, and operators were separate teams. Modern development practices emphasize developers handling all aspects of the software lifecycle.
+Historically, developers, testers, and operators were separate teams. Modern practices emphasize developers handling all aspects of the software lifecycle.
 
 ## Key Principles
 
 Maintainable systems require several foundational practices:
 
-**Testing** - Good testing is a minimal requirement for extending systems while ensuring they don't break. Tests catch bugs early, allow confident modifications, serve as up-to-date documentation, and improve public interfaces by forcing developers to consider client perspectives.
+**Testing** - Good testing is a minimal requirement to extend systems while ensuring they don't break. Tests catch bugs early, allow confident modifications, serve as up-to-date documentation, and improve system interfaces by forcing developers to consider client perspectives.
 
-**Automated Deployment** - Changes should be automatically rolled out to production without affecting availability. Manual deployments are infrequent, risky, and waste developer time.
+**[[Continuous Delivery]]** - Changes should be automatically rolled out to production without affecting availability once merged into the repository.
 
-**Monitoring and Observability** - Operators need visibility into system health to investigate degradations and restore service when issues occur.
+**[[Monitoring]]** - Operators need visibility into system health, ability to investigate degradations, and tools to restore systems when they enter bad states.
 
 **Manageability** - Systems should support state changes without code modifications through configuration changes or feature flags.
 
-## Testing Limitations
+## Testing Strategy
 
-While testing is crucial, it's not a silver bullet. Tests can only predict behaviors that developers can anticipate. Complex behaviors that only occur in production often aren't captured by tests. However, tests effectively validate expected behaviors and provide confidence for system modifications.
+Effective testing follows a pyramid structure:
+- Many unit tests (single component validation)
+- Fewer integration tests (external dependency integration)
+- Few end-to-end tests (multi-service user scenarios)
 
-Maintainability requires deliberate investment in automation, monitoring, and operational practices to reduce the long-term cost of software ownership.
+As test scope increases, tests become more brittle, slow, and costly. The goal is writing the smallest possible test for desired behavior while minimizing test doubles usage.
+
+## Formal Verification
+
+For critical systems, formal specification languages like TLA+ can catch subtle bugs and architecture issues before implementation. These tools verify safety properties (invariants) and liveness properties (eventual progress) in complex distributed systems.
 
 ---
-*Related: [[Software Testing]], [[Continuous Deployment]], [[System Monitoring]], [[Observability]]*
+*Related: [[Testing]], [[Continuous Delivery]], [[Monitoring]], [[Formal Verification]]*

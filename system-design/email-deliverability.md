@@ -1,54 +1,43 @@
 ---
 title: "Email Deliverability"
 category: system-design
-summary: "Email deliverability refers to the ability to successfully deliver emails to recipients' inboxes rather than spam folders. It requires building sender reputation through dedicated IPs, authentication protocols, and careful email classification."
+summary: "Email deliverability refers to the ability to successfully deliver emails to recipients' inboxes rather than spam folders. It requires careful reputation management, authentication protocols, and compliance with anti-spam measures."
 sources:
   - raw/articles/distributed-email-service-system-design-interview-by-alex-xu-pagefy.md
-updated: 2026-04-04T09:26:47.963Z
+updated: 2026-04-08T19:05:16.495Z
 ---
 
 # Email Deliverability
 
-> Email deliverability refers to the ability to successfully deliver emails to recipients' inboxes rather than spam folders. It requires building sender reputation through dedicated IPs, authentication protocols, and careful email classification.
+> Email deliverability refers to the ability to successfully deliver emails to recipients' inboxes rather than spam folders. It requires careful reputation management, authentication protocols, and compliance with anti-spam measures.
 
 # Email Deliverability
 
-Email deliverability is the challenge of ensuring emails reach recipients' inboxes rather than being filtered as spam. Setting up an email server is easy, but achieving good deliverability requires significant domain expertise.
+Email deliverability is the practice of ensuring emails reach recipients' inboxes rather than being filtered into spam folders. Building a reliable email delivery system requires significant domain expertise and careful reputation management.
 
-## Core Challenges
+## Key Challenges
 
-New email servers face immediate trust issues with major email providers. Without proper setup, emails from new servers typically end up in spam folders due to aggressive spam-protection algorithms.
+Setting up a server to send emails is technically simple, but achieving good deliverability is complex due to sophisticated spam protection algorithms used by major email providers. New mail servers often have their emails automatically classified as spam until they establish reputation.
 
-## Deliverability Strategies
+## Best Practices
 
-**IP Management:**
-- **Dedicated IPs**: Use dedicated IP addresses for sending emails to build trust
-- **IP Warm-up**: Gradually increase sending volume over 2-6 weeks to build reputation
-- **Email Classification**: Separate marketing emails from transactional emails using different servers
+**Dedicated IP addresses** are essential for building trust with recipient servers. Shared IPs can be tainted by other senders' poor practices.
 
-**Reputation Management:**
-- **Quick Spam Banning**: Rapidly identify and ban spam accounts to protect server reputation
-- **Feedback Processing**: Establish feedback loops with ISPs to monitor complaint rates
-- **Volume Control**: Avoid sudden spikes in email volume that trigger spam filters
+**Email classification** involves separating different types of emails (transactional vs. marketing) to prevent important messages from being affected by marketing email reputation issues.
 
-**Authentication Protocols:**
-- **SPF (Sender Policy Framework)**: Validates sending server authorization
-- **DKIM (DomainKeys Identified Mail)**: Cryptographically signs emails
-- **DMARC**: Provides policy framework for email authentication
+**IP warming** is a gradual process of building reputation with email providers, typically taking 2-6 weeks for new IP addresses.
 
-## Monitoring and Maintenance
+**Spam account management** requires quickly identifying and banning spammers to prevent reputation damage.
 
-Successful deliverability requires continuous monitoring of:
-- Bounce rates and complaint rates
-- Blacklist status across major providers
-- Authentication record validity
-- Sending reputation scores
+## Technical Measures
 
-## Impact on System Design
+**Email authentication** protocols like SPF (Sender Policy Framework) and DKIM (DomainKeys Identified Mail) help combat phishing and verify sender legitimacy.
 
-Deliverability requirements influence distributed email system architecture by necessitating separate infrastructure for different email types, sophisticated monitoring systems, and gradual scaling approaches rather than rapid deployment.
+**Feedback loops** with Internet Service Providers (ISPs) help monitor complaint rates and identify problematic sending patterns.
 
-Building reliable email deliverability requires deep understanding of email ecosystem politics and technical standards.
+**Reputation monitoring** tracks delivery rates, bounce rates, and spam complaints to maintain good standing with email providers.
+
+Successful email deliverability requires ongoing monitoring and adjustment of sending practices based on recipient feedback and delivery metrics.
 
 ---
-*Related: [[Distributed Email Service]], [[System Scaling]], [[Multi-Data Center Setup]]*
+*Related: [[Distributed Email Service]], [[DNS]], [[Security]], [[Monitoring]]*

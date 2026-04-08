@@ -3,8 +3,8 @@ title: "Failure Detection"
 category: distributed-systems
 summary: "Failure detection mechanisms help distributed systems identify when processes have crashed or become unavailable through timeouts, pings, and heartbeats."
 sources:
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:20:44.871Z
+  - raw/articles/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:42:20.007Z
 ---
 
 # Failure Detection
@@ -13,28 +13,27 @@ updated: 2026-04-04T10:20:44.871Z
 
 # Failure Detection
 
-When a client sends a request to a server and doesn't get a reply back, it's impossible to determine what went wrong. The server might be slow, crashed, or there could be a network issue. Without proper failure detection, clients might wait forever for responses.
+When a client sends a request and doesn't receive a response, it's impossible to distinguish between a slow server, a crashed server, or network issues. **Failure detection** mechanisms help identify unavailable processes.
 
-## Detection Mechanisms
+## Detection Strategies
 
-**Timeouts** - Basic mitigation involves setting timeouts with back-off and retry strategies. However, this is reactive and only detects failures when communication is attempted.
+**Timeouts**: Clients wait for a maximum duration before considering a request failed. This requires careful tuning - too short causes false positives, too long delays failure detection.
 
-**Ping** - Periodic request from client to server to check if process is available. Allows proactive failure detection.
+**Pings**: Periodic requests from clients to servers to check availability. The client actively probes the server's health.
 
-**Heartbeat** - Periodic request from server to client to indicate that server is still alive. Shifts responsibility to the server to prove its availability.
+**Heartbeats**: Periodic messages from servers to clients indicating they're still alive. The server actively signals its health status.
 
-Pings and heartbeats are commonly used in situations where processes communicate frequently, such as within microservice deployments.
+## Implementation Considerations
 
-## Challenges
+Pings and heartbeats are commonly used when processes communicate frequently, such as within microservice deployments. They help maintain an updated list of available processes.
 
-Failure detection faces the fundamental challenge that in an asynchronous network, it's impossible to distinguish between a slow process and a failed one. This leads to the trade-off between:
+The challenge is setting appropriate timeouts and intervals. Network delays, garbage collection pauses, and temporary slowdowns can trigger false failure detections, leading to unnecessary failovers.
 
-- **False positives** - Marking healthy but slow processes as failed
-- **False negatives** - Failing to detect actual failures quickly
+## Limitations
 
-The choice of timeout values and detection frequency must balance these concerns based on system requirements for availability and consistency.
+Failure detection in asynchronous systems is inherently imperfect. The [[System Models|partially synchronous model]] assumes the system behaves predictably most of the time, making failure detection practical despite theoretical impossibility in pure asynchronous systems.
 
-Failure detection is closely related to [[System Models]] and is fundamental to implementing [[System Resiliency]] patterns.
+Effective failure detection is crucial for [[Leader Election]] algorithms and maintaining system availability in distributed architectures.
 
 ---
-*Related: [[System Models]], [[System Resiliency]], [[Distributed Systems]]*
+*Related: [[System Models]], [[Leader Election]], [[Timeouts]]*

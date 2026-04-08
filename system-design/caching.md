@@ -1,68 +1,68 @@
 ---
 title: "Caching"
 category: system-design
-summary: "Caching is a high-speed storage layer that buffers frequently accessed data to improve performance and reduce load on origin data stores through strategic placement and cache management policies."
+summary: "Caching is a technique that stores frequently accessed data in fast memory storage to reduce database load and improve response times. It serves as a temporary data store layer that is much faster than traditional databases."
 sources:
   - raw/articles/scaling-system-design-interview-by-alex-xu-pagefy.md
-  - raw/articles/_done/scalability-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:24:57.511Z
+  - raw/articles/scalability-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:49:29.762Z
 ---
 
 # Caching
 
-> Caching is a high-speed storage layer that buffers frequently accessed data to improve performance and reduce load on origin data stores through strategic placement and cache management policies.
+> Caching is a technique that stores frequently accessed data in fast memory storage to reduce database load and improve response times. It serves as a temporary data store layer that is much faster than traditional databases.
 
 # Caching
 
-Caching is a high-speed storage layer that buffers frequently accessed data to improve application performance and reduce load on origin data stores. It provides best-effort guarantees since it's not the source of truth - cache state can always be rebuilt from the origin.
+Caching is a technique that stores frequently accessed data in fast memory storage to reduce database load and improve response times. It serves as a temporary data store layer that is much faster than traditional databases.
 
-## When Caching is Effective
+## Cache Policies
 
-Caching works best when a significant portion of requests target frequently accessed objects. The **hit ratio** (proportion of requests served from cache vs. origin) determines cost-effectiveness.
+When there's a cache miss, the missing object must be requested from the origin. There are two main policies:
 
-Hit ratio depends on:
-- **Total cacheable objects**: Fewer objects = better hit ratio
-- **Access probability**: Higher likelihood of repeated access = better performance
-- **Cache size**: Larger caches = more objects stored = higher hit ratios
+**Side Cache (Write-Through-Aside)**: The application requests the object from the origin and stores it in the cache. The cache is treated as a key-value store.
 
-## Cache Placement Strategy
+**Inline Cache (Write-Through)**: The cache communicates with the origin directly, requesting the missing object on behalf of the application. The app only accesses the cache.
 
-The higher in the call stack a cache is placed, the more requests it can capture. Multiple caching layers can be implemented:
+**Write-Back Cache**: Acts as a write-through cache but asynchronously updates the data store, adding complexity but improving performance.
 
-1. **Browser cache**: [[HTTP Caching]] at the client level
-2. **[[Content Delivery Network]]**: Geographic distribution of cached content
-3. **Reverse proxy cache**: Server-side caching via [[Load Balancer]]s
-4. **Application cache**: In-memory caches within application servers
-5. **Database cache**: Buffer pools and query result caching
+## Eviction and Expiration
 
-## Cache Management
+When cache capacity is limited, entries must be evicted. The most common eviction policy is **LRU (Least Recently Used)** - least-recently used elements are evicted first.
 
-**Eviction Policies**: Determine which items to remove when cache is full
-- LRU (Least Recently Used)
-- LFU (Least Frequently Used)
-- TTL (Time To Live) based expiration
+The **expiration policy** defines how long objects are stored before being refreshed from the origin (TTL). Higher TTL increases hit ratio but also increases the chance of serving stale objects.
 
-**Cache Invalidation**: Ensuring cache consistency with origin data
-- Write-through: Update cache and origin simultaneously
-- Write-behind: Update cache immediately, origin asynchronously
-- Cache-aside: Application manages cache updates
+Cache invalidation - automatically expiring objects when they change - is hard to implement in practice, which is why TTL is used as a workaround.
 
-## Important Considerations
+## Local Cache
 
-**Caching is an optimization, not a scaling solution**. The origin data store must handle all requests without cache assistance. It's acceptable for requests to become slower without cache, but not for the system to crash.
+The simplest implementation uses a library (like Guava in Java or RocksDB) for in-memory caching embedded within the application.
 
-**Cache warming**: Pre-populating caches with frequently accessed data to avoid cold start performance issues.
+**Advantages**: Simple to implement
 
-**Monitoring**: Track hit ratios, latency improvements, and cache effectiveness to optimize placement and sizing.
+**Disadvantages**:
+- Different replicas have different caches, wasting memory
+- Cannot be partitioned or replicated
+- Consistency issues - separate clients can see different versions
+- More application replicas mean more downstream traffic
+- Vulnerable to "thundering herd" when caches are empty
 
-## Integration with Scaling
+## External Cache
 
-Caching works synergistically with other [[System Scaling]] techniques:
-- Reduces database load, enabling higher throughput
-- Complements [[Database Sharding]] by reducing cross-partition queries
-- Works with [[Load Balancer]]s to distribute cached responses
+External caches are dedicated services (like [[Redis]] or [[Memcached]]) that provide shared caching functionality.
 
-Effective caching strategies can dramatically improve system performance while reducing infrastructure costs and complexity.
+**Advantages**:
+- Shared among clients for consistency
+- Can scale via replication and partitioning
+- Request load doesn't grow with application instances
+- Consistent hashing helps minimize data movement during scaling
+
+**Disadvantages**:
+- Higher maintenance cost
+- Higher latency due to network calls
+- Single point of failure requiring backup strategies
+
+Applications can maintain an in-process cache as backup when external cache fails.
 
 ---
-*Related: [[HTTP Caching]], [[Content Delivery Network]], [[System Scaling]], [[Load Balancer]], [[Database Sharding]]*
+*Related: [[Load Balancer]], [[Database Replication]], [[Content Delivery Network]], [[HTTP Caching]]*

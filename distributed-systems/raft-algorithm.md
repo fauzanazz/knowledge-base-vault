@@ -1,51 +1,49 @@
 ---
 title: "Raft Algorithm"
 category: distributed-systems
-summary: "Raft is a consensus algorithm that provides strong consistency guarantees through leader election and log replication, designed to be more understandable than Paxos."
+summary: "Raft is a consensus algorithm that provides strong consistency through leader-based replication, designed to be simpler to understand than Paxos."
 sources:
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:20:44.873Z
+  - raw/articles/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:42:20.011Z
 ---
 
 # Raft Algorithm
 
-> Raft is a consensus algorithm that provides strong consistency guarantees through leader election and log replication, designed to be more understandable than Paxos.
+> Raft is a consensus algorithm that provides strong consistency through leader-based replication, designed to be simpler to understand than Paxos.
 
 # Raft Algorithm
 
-Raft is a consensus algorithm that provides the strongest consistency guarantee in [[Distributed Systems]] - to clients, data appears to be stored on a single process. It's designed to be simpler to understand than Paxos while providing similar guarantees.
+**Raft** is a consensus algorithm that provides strong consistency guarantees through leader-based replication. It's designed to be more understandable than Paxos while providing equivalent functionality.
 
-## Core Components
+## State Machine Replication
 
-Raft consists of two main parts:
-1. **[[Leader Election]]** - Selecting a single leader from multiple candidates
-2. **Log Replication** - Replicating state changes across all nodes
+Raft uses state machine replication where the leader emits events for state changes, and followers update their state when receiving events. As long as all followers execute the same sequence of operations, they maintain identical state.
 
-## State Machine Replication Process
+## Replication Process
 
-1. **Leader Election** - System starts by electing a leader using Raft's election algorithm
-2. **Log Persistence** - Only leader accepts state updates, persisting them in local log without changing state
-3. **Replication** - Leader sends `AppendEntries` requests to all followers with new entries
-4. **Acknowledgment** - Followers append to local log and send acknowledgment back
-5. **Commit** - Once leader receives majority confirmations (quorum), it persists state change
-6. **Propagation** - Followers persist state change on subsequent `AppendEntries` indicating commit
+1. **Leader Election**: A leader is elected using Raft's [[Leader Election]] algorithm
+2. **Log Replication**: State changes are persisted in an event log replicated to followers
+3. **Append Entries**: Leaders send `AppendEntries` requests containing new entries to all followers
+4. **Acknowledgment**: Followers append entries to their logs and acknowledge receipt
+5. **Commit**: Once a majority acknowledges (quorum), the leader commits the state change
+6. **Propagation**: Subsequent `AppendEntries` requests inform followers to commit
 
 ## Fault Tolerance
 
-Raft can tolerate F failures where total nodes = 2F + 1.
+Raft tolerates F failures with 2F+1 total nodes. Key failure scenarios:
 
-**Leader Failure** - New election occurs. Candidates with less up-to-date logs cannot win elections.
+**Leader Failure**: New elections occur, but nodes can't vote for candidates with less up-to-date logs
 
-**Follower Failure** - When follower returns, it receives missed log entries through `AppendEntries` messages. If entries are missing, leader sends progressively more entries until follower is caught up.
+**Follower Failure**: Returning followers catch up by receiving missed log entries. If entries are missing, the leader sends progressively more historical entries until synchronization succeeds
 
 ## Consensus Properties
 
 Raft solves the distributed consensus problem by ensuring:
-- Every non-faulty process eventually agrees on a value
-- Final decision is the same everywhere  
-- Agreed value was proposed by a process
+- Every non-faulty process agrees on values
+- Final decisions are identical everywhere  
+- Agreed values were proposed by processes
 
-This makes Raft suitable for implementing fault-tolerant systems like etcd and other distributed key-value stores.
+Raft is widely implemented in production systems like etcd and provides the foundation for many distributed databases and coordination services.
 
 ---
-*Related: [[Leader Election]], [[Consensus]], [[Database Replication]], [[Distributed Systems]]*
+*Related: [[Leader Election]], [[Consensus]], [[State Machine Replication]]*

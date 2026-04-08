@@ -1,64 +1,66 @@
 ---
 title: "Causal Consistency"
 category: distributed-systems
-summary: "Causal consistency is the strongest consistency model that enables highly available and partition-tolerant systems by preserving happens-before relationships without requiring global ordering."
+summary: "Causal consistency preserves happens-before relationships between operations while allowing concurrent operations to be observed in different orders, providing a middle ground between eventual and strong consistency."
 sources:
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:22:31.022Z
+  - raw/articles/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:44:17.479Z
 ---
 
 # Causal Consistency
 
-> Causal consistency is the strongest consistency model that enables highly available and partition-tolerant systems by preserving happens-before relationships without requiring global ordering.
+> Causal consistency preserves happens-before relationships between operations while allowing concurrent operations to be observed in different orders, providing a middle ground between eventual and strong consistency.
 
 # Causal Consistency
 
-Causal consistency is a [[Consistency Models|consistency model]] that preserves happens-before relationships while allowing concurrent operations to be observed in different orders across replicas.
+Causal consistency is a [[Consistency Models|consistency model]] that preserves happens-before relationships between operations while allowing concurrent operations to be observed in different orders. It represents the strongest consistency model that enables building highly available and partition-tolerant systems.
 
-## Key Properties
+## Core Principles
 
-**Partial Ordering**: Imposes order only on causally related operations, unlike strong consistency which requires global ordering
-**Availability**: Enables highly available and partition-tolerant systems
-**Happens-Before**: Guarantees that if operation B causally depends on operation A, all clients observe A before B
+**Partial Ordering**: Unlike strong consistency which imposes global ordering, causal consistency only orders causally related operations. Operations that don't have a happens-before relationship can be observed in any order.
+
+**Client-Centric View**: Clients only care about happens-before relationships of operations concerning them, not all operations in the system.
 
 ## Example Scenario
 
-Consider these operations:
-- Client A writes value X (operation A)
-- Client B reads value X (operation B) 
-- Client B writes value Y (operation C)
-- Client C writes unrelated value Z (operation D)
+Consider this sequence:
+1. Client A writes value X (Operation A)
+2. Client B reads value X (Operation B) 
+3. Client B writes value Y (Operation C)
+4. Client C writes unrelated value Z (Operation D)
 
-Causal consistency guarantees:
-- Operation A happens-before C (causally related)
-- Operation D can be observed in any order relative to A and C (not causally related)
+**Causal Guarantees**:
+- Operation C happens-after A (causally related)
+- Any client observing C must also observe A first
+- Operation D has no causal relationship with others
+- Clients may observe A and D in any order
 
 ## COPS Implementation
 
-COPS (Clusters of Order-Preserving Servers) demonstrates causal consistency:
+COPS (Clusters of Order-Preserving Servers) demonstrates practical causal consistency:
 
-**Client Operations**:
-- Maintains local key-version dictionary tracking dependencies
-- Sends dependency information with write requests
+**Dependency Tracking**:
+- Clients maintain local key-version dictionaries
+- Writes include dependency information
+- Replicas assign versions and propagate writes
 
-**Replica Behavior**:
-- Assigns versions to writes
-- Delays commit until all dependencies are satisfied
-- Propagates writes to other replicas
+**Commit Protocol**:
+- Writes aren't committed until all dependencies are satisfied
+- Ensures causal ordering is preserved across replicas
 
-**Trade-offs**:
+## Trade-offs
+
+**Benefits**:
+- Stronger guarantees than [[Eventual Consistency]]
+- Maintains high availability and partition tolerance
+- Preserves intuitive ordering for related operations
+
+**Limitations**:
 - Potential data loss if replica fails before broadcasting
-- Avoids waiting for long-distance requests before acknowledgment
+- More complex than eventual consistency
+- Weaker than strong consistency for some use cases
 
-## Benefits
-
-Causal consistency provides:
-- Stronger guarantees than eventual consistency
-- Better availability than strong consistency
-- Natural ordering for user-perceived causality
-- Foundation for building intuitive distributed applications
-
-This model bridges the gap between eventual and strong consistency, making it ideal for applications requiring intuitive ordering without sacrificing availability during network partitions.
+Causal consistency provides an important middle ground for applications requiring ordered operations without full coordination overhead.
 
 ---
-*Related: [[Consistency Models]], [[Vector Clocks]], [[CAP Theorem]], [[Distributed Systems]], [[Logical Clocks]]*
+*Related: [[Consistency Models]], [[Logical Clocks]], [[Vector Clocks]], [[Eventual Consistency]]*

@@ -1,310 +1,133 @@
-# System Design Knowledge Base
+# system-design
 
-> 242 articles across 21 categories
-> Sources: System Design Interview (Alex Xu) + Understanding Distributed Systems (Roberto Vitillo) + vLLM/MLOps Research + Infrastructure Tools Research (2026)
+> Knowledge base with 89 articles across 13 categories
+> Last compiled: 2026-04-08T19:32:50.527Z
 
-## ai-fundamentals (6)
+## algorithms
 
-- [[Attention Mechanisms]] — 1. [Introduction & Motivation](#introduction)
-- [[Autonomous Ai Research]] — 1. [Introduction: The Dawn of Machine Scientists](#1-introduction)
-- [[Modern Reasoning Methods]] — 1. [Introduction: The Thinking Revolution](#introduction)
-- [[Rlhf Alignment Pipeline]] — *A Comprehensive Technical Reference*
-- [[Scaling Laws Training Pipeline]] — 1. [Introduction](#introduction)
-- [[Transformer Architecture]] — 1. [Introduction & Historical Context](#introduction)
+- [[HNSW Algorithm]] — HNSW (Hierarchical Navigable Small World) is the dominant algorithm for approximate nearest-neighbor search in vector databases. It builds multi-layer graphs enabling fast traversal with 95-99% recall and ~10ms query times on millions of vectors.
 
-## algorithms (6)
+## architecture
 
-- [[Base 62 Encoding]] — title: "Base 62 Encoding"
-- [[Leaking Bucket Algorithm]] — title: "Leaking Bucket Algorithm"
-- [[Sliding Window Rate Limiting]] — title: "Sliding Window Rate Limiting"
-- [[Token Bucket Algorithm]] — title: "Token Bucket Algorithm"
-- [[Twitter Snowflake]] — title: "Twitter Snowflake"
-- [[Vector Clocks]] — title: "Vector Clocks"
+- [[Software Architecture Principles]] — Software architecture principles guide system design decisions through established patterns like twelve-factor apps, reactive systems, and microservices. Good architecture balances scalability, maintainability, and complexity.
 
-## backend-architecture (17)
+## database
 
-- [[Actor Model]] — title: "Actor Model"
-- [[Api Gateway Pattern]] — title: "API Gateway Pattern"
-- [[Api Idempotency]] — title: "API Idempotency"
-- [[Backend For Frontend]] — title: "Backend for Frontend"
-- [[Bulkhead Pattern]] — title: "Bulkhead Pattern"
-- [[Circuit Breaker Pattern]] — title: "Circuit Breaker Pattern"
-- [[Clean Architecture]] — title: "Clean Architecture"
-- [[Database Per Service]] — title: "Database per Service"
-- [[Domain Driven Design]] — title: "Domain-Driven Design"
-- [[Event Driven Architecture]] — title: "Event-Driven Architecture"
-- [[Hexagonal Architecture]] — title: "Hexagonal Architecture"
-- [[Modular Monolith]] — title: "Modular Monolith"
-- [[Rest Apis]] — title: "REST APIs"
-- [[Serverless Architecture]] — title: "Serverless Architecture"
-- [[Service Mesh]] — title: "Service Mesh"
-- [[Shared Nothing Architecture]] — title: "Shared Nothing Architecture"
-- [[Strangler Fig Pattern]] — title: "Strangler Fig Pattern"
+- [[ACID Properties]] — ACID properties define the fundamental guarantees that database transactions must provide: Atomicity, Consistency, Isolation, and Durability.
+- [[Chroma]] — Chroma is an open-source, local-first vector database designed for easy prototyping and development. It features zero-config setup, built-in embedding functions, and can run in-memory, locally persistent, or distributed modes.
+- [[Database Replication]] — Database replication creates copies of data across multiple database servers to improve performance, reliability, and availability. The most common pattern is the master-slave model where writes go to the master and reads are distributed across slaves.
+- [[Database Sharding]] — Database sharding is a horizontal scaling technique that divides large databases into smaller, more manageable parts called shards. Each shard contains a subset of data and shares the same schema but stores unique data.
+- [[Dynamo-Style Data Stores]] — Dynamo-style data stores are eventually consistent, highly available key-value stores that use quorum-based replication and conflict resolution through CRDTs.
+- [[Hash Partitioning]] — Hash partitioning uses hash functions to deterministically map keys to partitions, providing uniform distribution but losing sorted order. Consistent hashing enables efficient rebalancing.
+- [[Isolation Levels]] — Isolation levels define the degree to which transactions are isolated from each other, balancing consistency guarantees against performance through different concurrency control mechanisms.
+- [[NewSQL Databases]] — NewSQL databases combine the ACID guarantees of traditional SQL databases with the horizontal scalability of NoSQL systems through advanced distributed consensus and partitioning techniques.
+- [[NoSQL Databases]] — NoSQL databases are designed for horizontal scalability and high availability, trading ACID guarantees for partition tolerance. They store data as key-value pairs or documents without strict schemas.
+- [[Pinecone]] — Pinecone is a fully managed vector database service that provides serverless and pod-based deployments for storing and querying high-dimensional embeddings. It offers zero ops overhead with auto-scaling capabilities.
+- [[Qdrant]] — Qdrant is an open-source vector database written in Rust, designed for high performance and reliability. It offers rich filtering capabilities, named vectors, and sparse vector support for hybrid search applications.
+- [[Range Partitioning]] — Range partitioning splits data into lexicographically sorted partitions, enabling efficient range queries but facing challenges with uneven data distribution and hotspots.
+- [[Vector Databases]] — Vector databases are specialized storage systems optimized for storing, indexing, and querying high-dimensional vector embeddings. They enable fast similarity search and are essential for AI applications like semantic search and RAG systems.
 
-## case-studies (6)
+## distributed-systems
 
-- [[Ad Click Event Aggregation]] — title: "Ad Click Event Aggregation"
-- [[Distributed Email Service]] — title: "Distributed Email Service"
-- [[Google Drive System Design]] — title: "Google Drive System Design"
-- [[Hotel Reservation System]] — title: "Hotel Reservation System"
-- [[Url Shortener]] — title: "URL Shortener"
-- [[Youtube System Design]] — title: "YouTube System Design"
+- [[Broadcast Protocols]] — Broadcast protocols enable message delivery to multiple receivers in distributed systems, with different guarantees for reliability and ordering.
+- [[CALM Theorem]] — The CALM theorem states that monotonic programs can achieve consistency without coordination, providing a framework for building coordination-free distributed applications.
+- [[Causal Consistency]] — Causal consistency preserves happens-before relationships between operations while allowing concurrent operations to be observed in different orders, providing a middle ground between eventual and strong consistency.
+- [[Chain Replication]] — Chain replication arranges processes in a linear chain where writes flow from head to tail, providing strong consistency with different trade-offs than leader-based replication.
+- [[Conflict-Free Replicated Data Types]] — CRDTs are data structures that automatically resolve conflicts in distributed systems without requiring consensus, enabling strong eventual consistency through mathematical properties.
+- [[Consistency Models]] — Consistency models define trade-offs between data consistency and system performance in distributed systems, ranging from strong to eventual consistency.
+- [[Failure Detection]] — Failure detection mechanisms help distributed systems identify when processes have crashed or become unavailable through timeouts, pings, and heartbeats.
+- [[Leader Election]] — Leader election algorithms select a single process from a group to coordinate shared resources or assign work, ensuring safety and liveness properties.
+- [[Logical Clocks]] — Logical clocks measure the passing of time in terms of logical operations rather than wall-clock time, enabling event ordering in distributed systems.
+- [[Outbox Pattern]] — The Outbox pattern ensures consistency between multiple data stores by using a local outbox table and asynchronous message processing to guarantee reliable data synchronization.
+- [[Physical Clocks]] — Physical clocks provide wall-time timestamps in distributed systems but face synchronization challenges due to clock drift and network latency.
+- [[Raft Algorithm]] — Raft is a consensus algorithm that provides strong consistency through leader-based replication, designed to be simpler to understand than Paxos.
+- [[Saga Pattern]] — The Saga pattern implements distributed transactions as a sequence of local transactions with compensating actions, providing atomicity without the blocking behavior of two-phase commit.
+- [[System Models]] — System models define assumptions about process behavior, communication links, and timing in distributed systems to enable reasoning about correctness and failure scenarios.
+- [[Two-Phase Commit]] — Two-phase commit is a distributed consensus protocol that ensures atomic transactions across multiple processes through a coordinator-participant model with prepare and commit phases.
 
-## data-structures (8)
+## due-diligence
 
-- [[Log Structured Merge Trees]] — title: "Log-Structured Merge Trees"
-- [[Merkle Tree]] — title: "Merkle Tree"
-- [[Order Book]] — title: "Order Book"
-- [[Redis Sorted Sets]] — title: "Redis Sorted Sets"
-- [[Skip List]] — title: "Skip List"
-- [[Trie Data Structure]] — title: "Trie Data Structure"
-- [[Vector Clock]] — title: "Vector Clock"
-- [[Write Ahead Log]] — title: "Write-Ahead Log"
+- [[Technical Due Diligence]] — Technical due diligence evaluates a company's technology assets, architecture, team, and processes during investment or acquisition scenarios. It assesses technical risks, scalability potential, and development capabilities.
 
-## database (15)
+## hiring
 
-- [[Acid Properties]] — title: "ACID Properties"
-- [[Database Replication]] — title: "Database Replication"
-- [[Database Sharding]] — title: "Database Sharding"
-- [[Dynamo Style Data Stores]] — title: "Dynamo-style Data Stores"
-- [[Key Value Store]] — title: "Key-Value Store"
-- [[Metadata Database]] — title: "Metadata Database"
-- [[Multi Version Concurrency Control]] — title: "Multi-Version Concurrency Control"
-- [[Newsql]] — title: "NewSQL"
-- [[Nosql]] — title: "NoSQL"
-- [[Optimistic Concurrency Control]] — title: "Optimistic Concurrency Control"
-- [[Optimistic Locking]] — title: "Optimistic Locking"
-- [[Pessimistic Locking]] — title: "Pessimistic Locking"
-- [[Star Schema]] — title: "Star Schema"
-- [[Time Series Database]] — title: "Time-Series Database"
-- [[Two Phase Locking]] — title: "Two-Phase Locking"
+- [[Engineering Hiring Process]] — Engineering hiring involves systematic evaluation of technical skills, problem-solving ability, and cultural fit through structured interviews, coding assessments, and behavioral evaluations. Effective processes balance thoroughness with candidate experience.
 
-## distributed-systems (12)
+## leadership
 
-- [[Calm Theorem]] — title: "CALM Theorem"
-- [[Causal Consistency]] — title: "Causal Consistency"
-- [[Chain Replication]] — title: "Chain Replication"
-- [[Conflict Free Replicated Data Types]] — title: "Conflict-Free Replicated Data Types"
-- [[Consensus]] — title: "Consensus"
-- [[Consistency Models]] — title: "Consistency Models"
-- [[Failure Detection]] — title: "Failure Detection"
-- [[Gossip Protocol]] — title: "Gossip Protocol"
-- [[Leader Election]] — title: "Leader Election"
-- [[Logical Clocks]] — title: "Logical Clocks"
-- [[Raft Algorithm]] — title: "Raft Algorithm"
-- [[System Models]] — title: "System Models"
+- [[Chief Technology Officer Role]] — The Chief Technology Officer (CTO) role varies significantly across organizations, from hands-on technical leadership in startups to strategic technology vision in large enterprises. CTOs must balance technical expertise with business acumen and people management skills.
 
-## frontend-architecture (15)
+## machine-learning
 
-- [[Client State Management]] — title: "Client State Management"
-- [[Css Architecture]] — title: "CSS Architecture"
-- [[Edge Rendering]] — title: "Edge Rendering"
-- [[Hydration Strategies]] — title: "Hydration Strategies"
-- [[Island Architecture]] — title: "Island Architecture"
-- [[Jamstack Architecture]] — title: "JAMstack Architecture"
-- [[Micro Frontends]] — title: "Micro-Frontends"
-- [[Module Federation]] — title: "Module Federation"
-- [[Progressive Enhancement]] — title: "Progressive Enhancement"
-- [[React Server Components]] — title: "React Server Components"
-- [[Rendering Strategies]] — title: "Rendering Strategies"
-- [[Resumability]] — title: "Resumability"
-- [[Signals And Fine Grained Reactivity]] — title: "Signals and Fine-Grained Reactivity"
-- [[Spa Vs Mpa Vs Hybrid]] — title: "SPA vs MPA vs Hybrid"
-- [[Streaming Ssr]] — title: "Streaming SSR"
+- [[Agent Communication Patterns]] — Agent communication patterns define how multiple AI agents exchange information and coordinate work through shared state, message passing, events, and direct calls.
+- [[Agent Frameworks]] — Agent frameworks provide infrastructure for building LLM-powered agents that can reason, act, and iterate through tool usage. Major frameworks include LangChain/LangGraph, CrewAI, AutoGen, and OpenAI Swarm.
+- [[AI Gateway]] — AI gateways provide a unified interface between applications and multiple AI providers, solving vendor lock-in, cost optimization, reliability, and observability challenges. They act as load balancers for LLMs without changing application API contracts.
+- [[AI Guardrails]] — AI guardrails are safety mechanisms that filter and validate inputs and outputs in production LLM systems to prevent hallucination, PII leakage, prompt injection, and other failure modes through multi-layered defense strategies.
+- [[AI Memory Systems]] — AI memory systems externalize state from stateless LLMs into queryable storage, enabling persistent learning and breaking context window limitations. They mirror human memory taxonomy with short-term, episodic, semantic, and procedural memory types.
+- [[AutoGen]] — AutoGen is Microsoft's conversational multi-agent framework where agents communicate through message exchanges. It features native code execution sandboxes and teachable agents that learn from conversations.
+- [[Braintrust]] — Braintrust is an experiment tracking platform for LLMs that focuses on comparing metric distributions across prompt versions and model changes, with built-in caching proxy for cost optimization.
+- [[Chain-of-Thought]] — Chain-of-Thought (CoT) prompting asks LLMs to show their reasoning process before producing final answers, dramatically improving accuracy on multi-step reasoning tasks. It can be implemented as zero-shot or few-shot approaches.
+- [[Chunking Strategies]] — Chunking strategies determine retrieval granularity in RAG systems and are the most common failure point. Strategies range from fixed-size splitting to semantic chunking and parent-child hierarchies.
+- [[CrewAI]] — CrewAI is a role-based multi-agent framework that models agent systems as crews of specialized agents with defined roles, goals, and backstories. Agents can delegate tasks to each other in sequential or hierarchical processes.
+- [[Cross-Encoder Reranking]] — Cross-encoder reranking is a post-retrieval optimization that jointly scores query-document pairs for improved precision. It's more accurate than bi-encoder similarity but has O(N) inference cost.
+- [[DeepEval]] — DeepEval is a general-purpose LLM evaluation framework with 14+ metrics and pytest integration, covering quality dimensions beyond RAG including bias, toxicity, and custom criteria evaluation.
+- [[Few-Shot Learning]] — Few-shot learning uses a small number of examples (typically 3-5) to teach LLMs patterns for structured tasks, providing higher ROI than exhaustive instructions. It's the most effective prompt enhancement for classification and structured generation.
+- [[Fine-tuning vs RAG vs Prompt Engineering]] — A decision framework for choosing between prompt engineering, RAG, and fine-tuning when customizing LLM behavior based on cost, effort, and performance trade-offs.
+- [[Guardrails AI Framework]] — Guardrails AI is a Python framework that provides structured validation for LLM inputs and outputs through a hub of 50+ pre-built validators and automatic retry-with-correction capabilities.
+- [[HyDE]] — HyDE (Hypothetical Document Embedding) is a retrieval technique that generates fake answers to queries and uses their embeddings for search. It works well when query language differs from document language.
+- [[LangGraph]] — LangGraph is a production-grade agent framework that models workflows as directed graphs with nodes as functions and edges as transitions. It supports state persistence, human-in-the-loop checkpoints, and complex branching logic.
+- [[LiteLLM]] — LiteLLM is an open-source Python library and proxy server that provides an OpenAI-compatible API for 100+ models across providers. It offers routing, load balancing, fallbacks, and caching for production LLM deployments.
+- [[LlamaGuard]] — LlamaGuard is Meta's fine-tuned Llama model specialized for content safety classification, covering 14 hazard categories and enabling self-hosted safety validation without third-party data exposure.
+- [[LLM Evaluation Frameworks]] — LLM evaluation frameworks provide systematic, reproducible metrics to replace vibes-based testing with quantified quality assurance for language model applications.
+- [[LLM Fine-tuning]] — Fine-tuning continues training pre-trained language models on domain-specific data to permanently alter weights and internalize specialized patterns, style, and behaviors.
+- [[Mem0]] — Mem0 is a managed memory layer that provides automatic extraction and retrieval of memories from LLM conversations. It sits transparently between applications and LLMs, using LLMs to extract atomic memory facts with deduplication and relevance scoring.
+- [[Model Context Protocol]] — The Model Context Protocol (MCP) is an open standard developed by Anthropic that defines how LLMs communicate with external tools, data sources, and services. It provides a universal interface that works across different models and tools, similar to USB-C for AI.
+- [[Multi-Agent Orchestration Patterns]] — Multi-agent orchestration patterns provide structured approaches for coordinating multiple LLM agents to achieve complex tasks through specialization, parallelism, and collaboration.
+- [[NeMo Guardrails]] — NeMo Guardrails is NVIDIA's dialog-centric safety framework that uses Colang domain-specific language to define conversation flow constraints and multi-turn safety logic for LLM applications.
+- [[OpenAI Swarm]] — OpenAI Swarm is a minimalist agent framework built on two primitives: agents (LLMs with instructions and tools) and handoffs (transferring control between agents). It's designed for prototyping rather than production use.
+- [[Portkey]] — Portkey is a managed AI gateway that combines routing with observability, virtual keys, and UI-driven configuration. It provides enterprise-oriented features for managing LLM deployments at scale.
+- [[Program-of-Thought]] — Program-of-Thought (PoT) has LLMs write and execute code instead of reasoning in natural language, providing more reliable results for numerical and logical tasks through deterministic execution.
+- [[Prompt Engineering]] — Prompt engineering is the discipline of crafting LLM inputs to reliably produce high-quality outputs through systematic design, versioning, testing, and cost control. It focuses on production-grade patterns rather than clever tricks.
+- [[Prompt Injection Detection]] — Prompt injection detection identifies adversarial inputs that attempt to override system instructions in LLM applications, using classifier-based, heuristic, or LLM-judge approaches to prevent security vulnerabilities.
+- [[RAG Architecture]] — Retrieval-Augmented Generation (RAG) grounds LLM responses in external knowledge through a spectrum of architectures from simple retrieve-then-read pipelines to modular orchestration systems. It reduces hallucination and enables domain-specific answers without fine-tuning.
+- [[RAGAS]] — RAGAS is an evaluation framework for RAG systems that measures faithfulness, answer relevance, context precision, and context recall. It provides standardized metrics for assessing retrieval and generation quality.
+- [[ReAct Pattern]] — ReAct (Reasoning + Acting) is the foundational pattern for LLM agents where models alternate between thinking, acting through tool calls, and observing results until reaching a goal. Most agent frameworks implement variants of this pattern.
+- [[Tool Calling]] — Tool calling (also called function calling) is the mechanism by which LLMs emit structured JSON requests for external actions rather than free-form text. It's the foundational primitive for building agents and automation pipelines.
+- [[Tree of Thought]] — Tree of Thought (ToT) extends Chain-of-Thought by exploring multiple reasoning branches in parallel, evaluating each path, and selecting the best solution. It's compute-intensive but valuable for complex planning and problem-solving tasks.
+- [[Vector Embeddings]] — Vector embeddings are dense, fixed-length numerical representations that encode semantic meaning of inputs like text, images, or audio. Semantically similar inputs produce geometrically close vectors in high-dimensional space.
+- [[Zep]] — Zep is an open-source long-term memory server optimized for chat applications. It provides automatic message summarization, named entity extraction, temporal knowledge graphs, and session-level memory scopes through REST APIs.
 
-## fullstack-patterns (12)
+## management
 
-- [[Blue Green Deployments]] — title: "Blue-Green Deployments"
-- [[Canary Deployments]] — title: "Canary Deployments"
-- [[Edge Computing]] — title: "Edge Computing"
-- [[Feature Flags]] — title: "Feature Flags"
-- [[Gitops]] — title: "GitOps"
-- [[Graphql Architecture]] — title: "GraphQL Architecture"
-- [[Incremental Adoption Patterns]] — title: "Incremental Adoption Patterns"
-- [[Monorepo Architecture]] — title: "Monorepo Architecture"
-- [[Observability Stack]] — title: "Observability Stack"
-- [[Trunk Based Development]] — title: "Trunk-Based Development"
-- [[Type Safe Apis]] — title: "Type-Safe APIs"
-- [[Websocket Architecture]] — title: "WebSocket Architecture"
+- [[Engineering Management]] — Engineering management involves leading technical teams through a combination of people leadership, technical guidance, and process optimization. Successful engineering managers balance individual contributor skills with management responsibilities.
 
-## geospatial-and-maps (10)
+## process
 
-- [[Geocoding]] — title: "Geocoding"
-- [[Geohash]] — title: "Geohash"
-- [[Geospatial Indexing]] — title: "Geospatial Indexing"
-- [[Google Maps System Design]] — title: "Google Maps System Design"
-- [[Map Projection]] — title: "Map Projection"
-- [[Map Tiling System]] — title: "Map Tiling System"
-- [[Proximity Service]] — title: "Proximity Service"
-- [[Quadtree]] — title: "Quadtree"
-- [[Routing Algorithms]] — title: "Routing Algorithms"
-- [[Routing Tiles]] — title: "Routing Tiles"
+- [[Development Process]] — Development processes provide structured approaches to software delivery through methodologies like Agile/Scrum, continuous integration/deployment, and version control workflows. Effective processes balance structure with team autonomy.
 
-## infrastructure-tools (7)
+## search
 
-- [[Cloud Platforms]] — 1. [Market Overview & Positioning](#market-overview--positioning)
-- [[Collaboration And Devops Tools]] — 1. [Overview & Philosophy](#overview--philosophy)
-- [[Enterprise Linux And Containers]] — 1. [Red Hat Enterprise Linux (RHEL)](#1-red-hat-enterprise-linux-rhel)
-- [[Hashicorp Suite]] — 1. [Introduction & Philosophy](#introduction--philosophy)
-- [[Message Brokers]] — 1. [Introduction](#introduction)
-- [[Redis]] — 1. [Architecture Overview](#architecture-overview)
-- [[Web Servers And Proxies]] — 1. [Apache HTTP Server](#apache-http-server)
+- [[Hybrid Search]] — Hybrid search combines dense vector embeddings with sparse keyword-based vectors to leverage both semantic understanding and exact keyword matching. It consistently outperforms dense-only search through techniques like Reciprocal Rank Fusion.
 
-## messaging-and-events (20)
+## startups
 
-- [[Asynchronous Communication]] — title: "Asynchronous Communication"
-- [[Consumer Groups]] — title: "Consumer Groups"
-- [[Consumer Rebalancing]] — title: "Consumer Rebalancing"
-- [[Cqrs Architecture]] — title: "CQRS Architecture"
-- [[Event Logs]] — title: "Event Logs"
-- [[Event Sourcing]] — title: "Event Sourcing"
-- [[Exactly Once Delivery]] — title: "Exactly-Once Delivery"
-- [[Fanout Service]] — title: "Fanout Service"
-- [[In Sync Replicas]] — title: "In-Sync Replicas"
-- [[Kappa Architecture]] — title: "Kappa Architecture"
-- [[Lambda Architecture]] — title: "Lambda Architecture"
-- [[Message Delivery Semantics]] — title: "Message Delivery Semantics"
-- [[Message Queue]] — title: "Message Queue"
-- [[Outbox Pattern]] — title: "Outbox Pattern"
-- [[Pull Vs Push Architecture]] — title: "Pull vs Push Architecture"
-- [[Redis Pub Sub]] — title: "Redis Pub/Sub"
-- [[Saga Pattern]] — title: "Saga Pattern"
-- [[Sagas]] — title: "Sagas"
-- [[Topic Partitioning]] — title: "Topic Partitioning"
-- [[Watermark]] — title: "Watermark"
+- [[Startup Technology Strategy]] — Startup technology strategy focuses on rapid iteration, technical debt management, and scaling decisions that balance speed-to-market with long-term sustainability. CTOs must navigate resource constraints while building foundations for growth.
 
-## mlops (14)
+## system-design
 
-- [[Chunked Prefill]] — Chunked prefill is a scheduling technique that splits long prompt processing into fixed-size token chunks, interleaving 
-- [[Continuous Batching]] — Continuous batching (also called iteration-level scheduling or in-flight batching) is a scheduling strategy for LLM infe
-- [[Distributed Llm Serving]] — Multi-node LLM serving is the operational frontier of large-scale inference — running models that are too large for a si
-- [[Kv Cache Management]] — KV cache management in LLM serving systems refers to the allocation, tracking, sharing, and reclamation of GPU memory us
-- [[Llm Inference Serving]] — Large Language Model (LLM) inference serving is the process of deploying trained language models to generate text respon
-- [[Llm Quantization Serving]] — Quantization reduces the numerical precision of model weights and/or activations to decrease memory footprint, increase 
-- [[Paged Attention]] — PagedAttention is a memory management algorithm for transformer attention that stores the Key-Value (KV) cache in non-co
-- [[Pipeline Parallelism]] — Pipeline Parallelism (PP) distributes *contiguous groups of transformer layers* across multiple GPUs or nodes, with each
-- [[Prefix Caching]] — Automatic Prefix Caching (APC) is vLLM's mechanism for detecting, storing, and reusing KV (Key-Value) cache blocks that 
-- [[Speculative Decoding]] — Speculative decoding is a **lossless** latency optimization technique for autoregressive language model inference. It ex
-- [[Tensor Parallelism]] — Tensor Parallelism (TP) is the primary strategy for sharding large language model weights across multiple GPUs within a 
-- [[Vllm Advanced Features]] — vLLM has evolved from a pure inference engine into a comprehensive serving platform with advanced features spanning stru
-- [[Vllm Architecture]] — vLLM is an open-source LLM inference and serving engine developed at UC Berkeley that achieves state-of-the-art throughp
-- [[Vllm V1 Architecture]] — vLLM V1 is a ground-up re-architecture of the vLLM inference engine, made generally available in **v0.11.0 (December 202
-
-## monitoring-and-observability (11)
-
-- [[Alert Manager]] — title: "Alert Manager"
-- [[Alerting]] — title: "Alerting"
-- [[Dashboards]] — title: "Dashboards"
-- [[Data Aggregation]] — title: "Data Aggregation"
-- [[Data Down Sampling]] — title: "Data Down-sampling"
-- [[Distributed Tracing]] — title: "Distributed Tracing"
-- [[Metrics Monitoring And Alerting System]] — title: "Metrics Monitoring and Alerting System"
-- [[Observability]] — title: "Observability"
-- [[On Call Engineering]] — title: "On-Call Engineering"
-- [[Service Level Objectives]] — title: "Service Level Objectives"
-- [[System Monitoring]] — title: "System Monitoring"
-
-## networking (7)
-
-- [[Dns System]] — title: "DNS System"
-- [[Email Protocols]] — title: "Email Protocols"
-- [[Fix Protocol]] — title: "FIX Protocol"
-- [[Http Protocol]] — title: "HTTP Protocol"
-- [[Tcp Protocol]] — title: "TCP Protocol"
-- [[Tls Security]] — title: "TLS Security"
-- [[Websocket]] — title: "WebSocket"
-
-## payments-and-fintech (15)
-
-- [[Card Schemes]] — title: "Card Schemes"
-- [[Client Gateway]] — title: "Client Gateway"
-- [[Digital Wallet System]] — title: "Digital Wallet System"
-- [[Exactly Once Payment Processing]] — title: "Exactly-Once Payment Processing"
-- [[Ledger System]] — title: "Ledger System"
-- [[Market Data Publisher]] — title: "Market Data Publisher"
-- [[Matching Engine]] — title: "Matching Engine"
-- [[Order Manager]] — title: "Order Manager"
-- [[Payment Security]] — title: "Payment Security"
-- [[Payment Service Provider Integration]] — title: "Payment Service Provider Integration"
-- [[Payment System]] — title: "Payment System"
-- [[Real Time Bidding]] — title: "Real-Time Bidding"
-- [[Reconciliation]] — title: "Reconciliation"
-- [[Stock Exchange System Design]] — title: "Stock Exchange System Design"
-- [[Wallet Service]] — title: "Wallet Service"
-
-## real-time-systems (7)
-
-- [[Chat System]] — title: "Chat System"
-- [[Nearby Friends System]] — title: "Nearby Friends System"
-- [[News Feed System]] — title: "News Feed System"
-- [[Notification System]] — title: "Notification System"
-- [[Online Presence System]] — title: "Online Presence System"
-- [[Push Notification]] — title: "Push Notification"
-- [[Real Time Gaming Leaderboard]] — title: "Real-time Gaming Leaderboard"
-
-## search-and-crawling (5)
-
-- [[Email Search Architecture]] — title: "Email Search Architecture"
-- [[Robots Txt]] — title: "Robots.txt"
-- [[Search Autocomplete System]] — title: "Search Autocomplete System"
-- [[Url Frontier]] — title: "URL Frontier"
-- [[Web Crawler]] — title: "Web Crawler"
-
-## software-engineering (5)
-
-- [[Continuous Deployment]] — title: "Continuous Deployment"
-- [[Formal Verification]] — title: "Formal Verification"
-- [[Software Maintainability]] — title: "Software Maintainability"
-- [[Software Testing]] — title: "Software Testing"
-- [[Test Doubles]] — title: "Test Doubles"
-
-## storage-systems (8)
-
-- [[Blob Storage Architecture]] — title: "Blob Storage Architecture"
-- [[Block Based File Storage]] — title: "Block-based File Storage"
-- [[Content Deduplication]] — title: "Content Deduplication"
-- [[Content Delivery Network]] — title: "Content Delivery Network"
-- [[Delta Sync]] — title: "Delta Sync"
-- [[File Conflict Resolution]] — title: "File Conflict Resolution"
-- [[File Synchronization]] — title: "File Synchronization"
-- [[Video Transcoding]] — title: "Video Transcoding"
-
-## system-design (36)
-
-- [[Api Gateway]] — title: "API Gateway"
-- [[Back Of The Envelope Estimation]] — title: "Back-of-the-Envelope Estimation"
-- [[Caching]] — title: "Caching"
-- [[Cap Theorem]] — title: "CAP Theorem"
-- [[Configuration Management]] — title: "Configuration Management"
-- [[Consistent Hashing]] — title: "Consistent Hashing"
-- [[Control Plane And Data Plane]] — title: "Control Plane and Data Plane"
-- [[Distributed Systems]] — title: "Distributed Systems"
-- [[Downstream Resiliency]] — title: "Downstream Resiliency"
-- [[Email Deliverability]] — title: "Email Deliverability"
-- [[Fault Isolation]] — title: "Fault Isolation"
-- [[Horizontal Scaling]] — title: "Horizontal Scaling"
-- [[Http Caching]] — title: "HTTP Caching"
-- [[Idempotency]] — title: "Idempotency"
-- [[Load Balancer]] — title: "Load Balancer"
-- [[Microservices Architecture]] — title: "Microservices Architecture"
-- [[Multi Data Center Setup]] — title: "Multi-Data Center Setup"
-- [[Network Communication]] — title: "Network Communication"
-- [[Partitioning Strategies]] — title: "Partitioning Strategies"
-- [[Qps Estimation]] — title: "QPS Estimation"
-- [[Quorum Consensus]] — title: "Quorum Consensus"
-- [[Raft Consensus]] — title: "Raft Consensus"
-- [[Rate Limiter]] — title: "Rate Limiter"
-- [[Redundancy]] — title: "Redundancy"
-- [[Sequencer]] — title: "Sequencer"
-- [[Service Discovery]] — title: "Service Discovery"
-- [[System Design Interview Framework]] — title: "System Design Interview Framework"
-- [[System Maintainability]] — title: "System Maintainability"
-- [[System Resiliency]] — title: "System Resiliency"
-- [[System Scaling]] — title: "System Scaling"
-- [[Try Confirm Cancel Protocol]] — title: "Try-Confirm/Cancel Protocol"
-- [[Two Generals Problem]] — title: "Two Generals Problem"
-- [[Two Phase Commit]] — title: "Two-Phase Commit"
-- [[Unique Id Generator]] — title: "Unique ID Generator"
-- [[Upstream Resiliency]] — title: "Upstream Resiliency"
-- [[Vertical Scaling]] — title: "Vertical Scaling"
+- [[API Gateway]] — An API Gateway is a facade that hides internal microservice APIs behind a unified interface, providing routing, composition, translation, and cross-cutting concerns like authentication and rate limiting.
+- [[Blob Storage Architecture]] — Blob storage systems like Azure Storage use multi-layer architectures with stream, partition, and front-end layers to provide scalable, durable file storage across geographically distributed clusters.
+- [[Caching]] — Caching is a technique that stores frequently accessed data in fast memory storage to reduce database load and improve response times. It serves as a temporary data store layer that is much faster than traditional databases.
+- [[Content Delivery Network]] — A Content Delivery Network (CDN) is a geographically distributed network of servers that cache static content closer to users to improve load times and reduce server load. CDNs are essential for global applications requiring fast content delivery.
+- [[Control Plane and Data Plane]] — Control plane and data plane separation is a common pattern where the data plane handles critical path requests requiring high availability and scale, while the control plane manages configuration and metadata with different requirements.
+- [[Fanout Service]] — A fanout service propagates user posts to their friends' news feeds, implementing either push, pull, or hybrid strategies based on user connection patterns. It's a critical component for distributing content at scale in social media systems.
+- [[Horizontal Scaling]] — Horizontal scaling involves adding more servers to a system pool rather than upgrading existing hardware. This approach is more suitable for large-scale systems and requires load balancers to distribute traffic across multiple servers.
+- [[HTTP Caching]] — HTTP caching enables browsers and servers to store static resources locally to reduce network calls and improve performance. It uses Cache-Control headers and ETags to manage resource freshness and validation.
+- [[Load Balancer]] — A load balancer distributes incoming network traffic across multiple servers to ensure no single server becomes overwhelmed. It provides redundancy, scalability, and improved system reliability.
+- [[Message Queue]] — A message queue is a durable component that enables asynchronous communication between system components. It serves as a buffer that stores messages in memory and allows producers to send messages that consumers can process independently.
+- [[Microservices Architecture]] — Microservices architecture decomposes monolithic applications into independently deployable services communicating via APIs. This approach enables better team autonomy and scalability but introduces distributed system complexity.
+- [[Multi-Data Center Setup]] — Multi-data center setup involves deploying applications across multiple geographically distributed data centers to improve availability, reduce latency, and provide disaster recovery capabilities. It requires careful consideration of traffic routing, data synchronization, and deployment strategies.
+- [[News Feed System]] — A news feed system displays constantly updating posts from user connections in reverse chronological order. It requires careful design of feed publishing and retrieval flows to handle millions of daily active users.
+- [[System Scaling]] — System scaling is the process of growing a system architecture from a single server to handle millions of users through iterative refinement and optimization. It involves both vertical and horizontal scaling strategies to manage increasing traffic and data loads.
+- [[Vertical Scaling]] — Vertical scaling involves adding more resources (CPU, RAM, storage) to existing servers to handle increased load. While simpler to implement than horizontal scaling, it has limitations including hardware constraints, lack of redundancy, and higher costs.
 

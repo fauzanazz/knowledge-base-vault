@@ -3,8 +3,8 @@ title: "Conflict-Free Replicated Data Types"
 category: distributed-systems
 summary: "CRDTs are data structures that automatically resolve conflicts in distributed systems without requiring consensus, enabling strong eventual consistency through mathematical properties."
 sources:
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:22:31.020Z
+  - raw/articles/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:44:17.475Z
 ---
 
 # Conflict-Free Replicated Data Types
@@ -13,38 +13,39 @@ updated: 2026-04-04T10:22:31.020Z
 
 # Conflict-Free Replicated Data Types
 
-Conflict-free replicated data types (CRDTs) are specialized data structures that enable [[Database Replication]] without requiring [[Consensus]] to resolve conflicts. They achieve **strong eventual consistency** by ensuring replicas automatically converge to the same state.
+Conflict-free replicated data types (CRDTs) are specialized data structures that enable automatic conflict resolution in distributed systems without requiring [[Consensus Algorithms|consensus]]. They achieve **strong eventual consistency** by ensuring replicas converge to the same state when they have applied the same updates.
 
-## Core Properties
+## Core Requirements
 
-CRDTs work by satisfying two mathematical conditions:
+For a data type to be a CRDT, it must satisfy two mathematical conditions:
 
 1. **Semilattice Structure**: The object's possible states form a semilattice where elements can be partially ordered
-2. **Merge Operation**: The merge function must be:
+2. **Merge Operation Properties**: The merge operation must be:
    - **Idempotent**: x + x = x
    - **Commutative**: x + y = y + x  
    - **Associative**: (x + y) + z = x + (y + z)
 
-These properties ensure that merging states in any order produces the same result, even with message reordering or duplication.
+These properties ensure that merging states works correctly regardless of message order or duplicate deliveries.
 
 ## Types and Examples
 
 **Convergent CRDTs** include:
-- **Registers**: Memory cells with byte arrays
-  - Last-Writer-Wins (LWW): Uses timestamps with [[Logical Clocks]]
-  - Multi-Value (MV): Stores concurrent updates using [[Vector Clocks]]
+- **Registers**: Memory cells storing byte arrays
+  - Last-Writer-Wins (LWW) registers use timestamps
+  - Multi-Value (MV) registers store concurrent updates
 - **Counters**: Support increment operations that converge to global maximum
-- **Sets**: Enable add/remove operations with conflict resolution
-- **Dictionaries**: Composed CRDTs for complex data structures
+- **Sets**: Collections that merge through union operations
+- **Dictionaries**: Key-value stores composed of CRDT values
 
-## Benefits
+## Advantages
 
-CRDTs eliminate the need for coordination during normal operation, providing:
-- Better availability than total order broadcast
-- Higher performance by avoiding consensus on the critical path
-- Partition tolerance with automatic conflict resolution
+CRDTs offer significant benefits over traditional [[Consistency Models|consistency]] approaches:
+- No coordination required for conflict resolution
+- Better availability and performance than total order broadcast
+- Can use unreliable broadcast protocols with anti-entropy mechanisms
+- Conflicts resolved by design rather than consensus
 
-CRDTs are fundamental to [[Dynamo-style Data Stores]] and enable building systems that satisfy the [[CAP Theorem]] by choosing availability and partition tolerance while maintaining eventual consistency.
+CRDTs enable building highly available systems that maintain consistency without the coordination overhead of traditional distributed consensus protocols.
 
 ---
-*Related: [[Database Replication]], [[Consensus]], [[Consistency Models]], [[Vector Clocks]], [[Logical Clocks]]*
+*Related: [[Consistency Models]], [[Database Replication]], [[Consensus Algorithms]], [[Eventual Consistency]]*

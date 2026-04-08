@@ -1,51 +1,49 @@
 ---
 title: "Consistency Models"
 category: distributed-systems
-summary: "Consistency models define trade-offs between data consistency and system performance in distributed systems, ranging from strong consistency to eventual consistency."
+summary: "Consistency models define trade-offs between data consistency and system performance in distributed systems, ranging from strong to eventual consistency."
 sources:
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:20:44.873Z
+  - raw/articles/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:42:20.012Z
 ---
 
 # Consistency Models
 
-> Consistency models define trade-offs between data consistency and system performance in distributed systems, ranging from strong consistency to eventual consistency.
+> Consistency models define trade-offs between data consistency and system performance in distributed systems, ranging from strong to eventual consistency.
 
 # Consistency Models
 
-Consistency models help define the trade-off between consistency and performance in [[Distributed Systems]]. They determine what guarantees clients have when reading data from replicated systems.
+**Consistency models** define the trade-offs between data consistency and system performance in replicated distributed systems.
 
 ## Strong Consistency
 
-All reads and writes go through the leader, guaranteeing that all observers see writes after they're persisted. This provides the strongest guarantees but limits throughput.
+**Strong consistency** ensures all observers see writes after they're persisted. This requires routing all reads and writes through the leader, guaranteeing the latest state but limiting throughput.
 
-**Caveat**: Leaders can't instantly confirm writes - they must first confirm they're still the leader by sending requests to all followers, adding latency to reads.
+Leaders must confirm they're still the leader before responding to reads, adding latency to serve requests.
 
 ## Sequential Consistency
 
-Followers can serve reads while clients are attached to particular followers. This leads to different clients seeing different states, but operations always occur in the same order.
+**Sequential consistency** allows followers to serve reads while attaching clients to specific followers. Different clients may see different states, but operations always occur in the same order.
 
-**Example**: Producer/consumer system synchronized with a queue where producers and consumers see events in the same order but at different times.
-
-**Trade-off**: Higher throughput than strong consistency, but clients must handle follower failures by waiting or switching followers.
+Example: Producer/consumer systems synchronized with queues where all participants see events in the same order but at different times.
 
 ## Eventual Consistency
 
-Clients can use any follower for reads. The only guarantee is that clients will eventually see the latest state.
+**Eventual consistency** allows clients to use any follower, maximizing availability. Clients may receive stale data if followers lag behind, but they're guaranteed to eventually see the latest state.
 
-**Challenge**: If follower B lags behind follower A, a client querying A then B will receive an earlier version of the state.
+This model works well for applications like view counters where slight inaccuracies are acceptable.
 
-**Use cases**: Applications where perfect consistency isn't critical, like view counts on videos or social media likes.
+## CAP Theorem
 
-## CAP and PACELC Theorems
+The **CAP theorem** states that during network partitions, systems must choose between:
+- **Consistency**: Guarantee strong consistency by declining reads that can't reach the leader
+- **Availability**: Remain available by allowing follower queries, sacrificing strong consistency
 
-**CAP Theorem**: During network partitions, choose between availability and consistency.
+## PACELC Theorem
 
-**PACELC Theorem**: Even without partitions, there's a trade-off between latency and consistency - stronger consistency means higher latency.
+**PACELC** extends CAP: "In case of Partition, choose between Availability and Consistency; Else, choose between Latency and Consistency."
 
-## Practical Considerations
-
-Some databases allow configurable consistency levels (Amazon DynamoDB, Cassandra) while others provide counter-intuitive guarantees for better performance. The choice depends on application requirements and acceptable trade-offs.
+This highlights that even without partitions, there's a fundamental trade-off between consistency strength and system latency.
 
 ---
-*Related: [[Database Replication]], [[CAP Theorem]], [[Distributed Systems]], [[System Scaling]]*
+*Related: [[Database Replication]], [[CAP Theorem]], [[Distributed Systems]]*

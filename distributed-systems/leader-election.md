@@ -1,52 +1,53 @@
 ---
 title: "Leader Election"
 category: distributed-systems
-summary: "Leader election algorithms select a single process from a group of candidates to gain exclusive rights to resources or coordinate work, ensuring safety and liveness properties."
+summary: "Leader election algorithms select a single process from a group to coordinate shared resources or assign work, ensuring safety and liveness properties."
 sources:
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:20:44.872Z
+  - raw/articles/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:42:20.010Z
 ---
 
 # Leader Election
 
-> Leader election algorithms select a single process from a group of candidates to gain exclusive rights to resources or coordinate work, ensuring safety and liveness properties.
+> Leader election algorithms select a single process from a group to coordinate shared resources or assign work, ensuring safety and liveness properties.
 
 # Leader Election
 
-Leader election is a fundamental problem in [[Distributed Systems]] where one among N processes needs to gain exclusive rights to accessing a shared resource or to assign work to others.
+**Leader election** selects one process from N equally valid candidates to gain exclusive access to shared resources or coordinate work distribution.
 
 ## Required Properties
 
-A leader election algorithm must guarantee:
-
-**Safety** - There will always be at most one leader elected at a time
-**Liveness** - The process will work correctly even in the presence of failures
+- **Safety**: Only one leader exists at any time
+- **Liveness**: The algorithm works correctly despite failures
 
 ## Raft Leader Election
 
-Raft is a popular leader election algorithm where every process is a state machine with three states:
+Raft implements leader election through a state machine with three states:
 
-**Follower state** - Process recognizes another process as leader
-**Candidate state** - Process starts a new election, proposing itself as leader  
-**Leader state** - Process is the current leader
+**Follower**: Recognizes another process as leader and expects periodic heartbeats
+
+**Candidate**: Starts new elections, proposing itself as leader
+
+**Leader**: Coordinates the system and sends heartbeats
 
 ### Election Process
 
-Time is divided into **election terms** numbered with consecutive integers. Each term begins with a new election.
+Time is divided into **election terms** with consecutive integer identifiers. Elections begin each term:
 
-1. **Startup** - All processes begin as followers
-2. **Timeout** - If follower doesn't receive leader heartbeat, it becomes candidate
-3. **Campaign** - Candidate requests votes from all other processes
-4. **Resolution** - Three outcomes possible:
-   - Candidate wins majority → becomes leader
-   - Another process wins → reverts to follower
-   - Split vote → new election after random timeout
+1. Processes start as followers expecting leader heartbeats
+2. Missing heartbeats trigger timeout, transitioning to candidate state
+3. Candidates request votes from all other processes
+4. Majority votes win the election
+5. Receiving heartbeats from higher-term leaders causes candidates to step down
+6. Split votes trigger new elections after random timeouts
 
 ## Practical Implementation
 
-In practice, you rarely implement leader election from scratch. Instead, use fault-tolerant key-value stores with TTL and linearizable compare-and-swap operations like etcd or ZooKeeper.
+Rather than implementing from scratch, use fault-tolerant key-value stores with TTL and linearizable compare-and-swap operations (like etcd or ZooKeeper).
 
-**Important consideration**: Leaders should do minimal work and systems should handle occasional multiple leaders gracefully, as network partitions can cause lease confusion.
+## Considerations
+
+Leaders should minimize work to reduce impact of occasional multiple leaders due to network partitions. Race conditions can occur after acquiring leadership if network issues cause lease loss while the process still believes it's the leader.
 
 ---
-*Related: [[Distributed Systems]], [[Raft Algorithm]], [[Consensus]]*
+*Related: [[Raft Algorithm]], [[Consensus]], [[Failure Detection]]*

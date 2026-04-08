@@ -1,55 +1,56 @@
 ---
 title: "Database Replication"
 category: database
-summary: "Database replication creates copies of data across multiple database servers to improve performance, reliability, and availability through various consistency models and replication strategies."
+summary: "Database replication creates copies of data across multiple database servers to improve performance, reliability, and availability. The most common pattern is the master-slave model where writes go to the master and reads are distributed across slaves."
 sources:
   - raw/articles/scaling-system-design-interview-by-alex-xu-pagefy.md
-  - raw/articles/_done/coordination-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:20:44.872Z
+  - raw/articles/scalability-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:48:15.248Z
 ---
 
 # Database Replication
 
-> Database replication creates copies of data across multiple database servers to improve performance, reliability, and availability through various consistency models and replication strategies.
+> Database replication creates copies of data across multiple database servers to improve performance, reliability, and availability. The most common pattern is the master-slave model where writes go to the master and reads are distributed across slaves.
 
 # Database Replication
 
-Database replication creates copies of data across multiple database servers to improve performance, reliability, and availability. It's fundamental for [[Distributed Systems]] that need to scale beyond single machines.
+Database replication creates copies of data across multiple database servers to improve performance, reliability, and availability. The most common pattern is the master-slave model where writes go to the master and reads are distributed across slaves.
 
-## Reasons for Replication
+## Leader-Follower Replication
 
-**Availability** - If data is stored on a single process and it goes down, the data becomes unavailable. Replication provides redundancy.
+In leader-follower replication:
+- Clients send writes to the leader
+- Leader persists changes in its write-ahead log
+- Replicas connect to the leader and stream log entries
+- Replicas can disconnect/reconnect, maintaining their log sequence number
 
-**Scalability** - More replicas allow supporting more concurrent clients by distributing read load.
+## Benefits
 
-**Performance** - Data can be placed closer to users geographically, reducing latency.
+- **Increased Read Capacity**: Distribute read queries across multiple replicas
+- **Higher Availability**: System continues operating if leader fails
+- **Query Isolation**: Run expensive analytics on followers without impacting primary workload
 
-## Master-Slave Replication
+## Replication Modes
 
-The most common pattern involves:
-- **Master** - Handles all write operations
-- **Slaves** - Replicate data from master and serve read requests
-- **Asynchronous replication** - Slaves eventually receive updates
+**Fully Synchronous**: Leader waits for all followers to acknowledge before responding to client. Highly consistent but not performant—a single slow replica slows all writes.
 
-## State Machine Replication
+**Fully Asynchronous**: Leader immediately responds after persisting locally. Minimum latency but not fault tolerant—leader can crash after acknowledgment but before broadcast.
 
-A stronger consistency approach where:
-- Leader emits events for state changes
-- All followers execute the same sequence of operations
-- Results in identical state across all replicas
-- Requires consensus protocols like [[Raft Algorithm]]
+**Hybrid (Semi-synchronous)**: Some followers receive writes synchronously, others asynchronously. This is PostgreSQL's default behavior. Provides balance between consistency and performance.
 
-## Consistency Models
+## Failover Process
 
-**Strong Consistency** - All reads/writes go through leader, guaranteeing latest state but limiting throughput
+If a leader crashes, the system can fail over to a synchronous follower without data loss. This requires:
+- Detection of leader failure
+- Promotion of a follower to leader
+- Redirection of client traffic
+- Reconfiguration of remaining followers
 
-**Sequential Consistency** - Clients attached to specific followers see operations in same order but at different times
+## Limitations
 
-**Eventual Consistency** - Clients can use any replica, guaranteed to eventually see latest state but may see stale data temporarily
+Replication increases read capacity but still requires the database to fit on a single machine. For true horizontal scaling of both reads and writes, [[Database Sharding]] is necessary.
 
-## Trade-offs
-
-Replication involves fundamental trade-offs described by the CAP theorem - you can't simultaneously guarantee strong consistency, availability, and partition tolerance. The choice depends on application requirements.
+Replication also introduces eventual consistency challenges, where reads from followers may return stale data until replication catches up.
 
 ---
-*Related: [[Distributed Systems]], [[Consistency Models]], [[CAP Theorem]], [[Raft Algorithm]]*
+*Related: [[Database Sharding]], [[System Scaling]], [[ACID Properties]], [[NewSQL Databases]]*

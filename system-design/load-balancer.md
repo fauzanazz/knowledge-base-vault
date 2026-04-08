@@ -1,71 +1,56 @@
 ---
 title: "Load Balancer"
 category: system-design
-summary: "A load balancer distributes incoming network traffic across multiple servers using various algorithms and health checks, operating at different network layers to provide scalability and fault tolerance."
+summary: "A load balancer distributes incoming network traffic across multiple servers to ensure no single server becomes overwhelmed. It provides redundancy, scalability, and improved system reliability."
 sources:
   - raw/articles/scaling-system-design-interview-by-alex-xu-pagefy.md
-  - raw/articles/_done/scalability-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
-updated: 2026-04-04T10:24:57.510Z
+  - raw/articles/scalability-understanding-distributed-systems-by-roberto-vitillo-pagefy.md
+updated: 2026-04-08T18:48:15.247Z
 ---
 
 # Load Balancer
 
-> A load balancer distributes incoming network traffic across multiple servers using various algorithms and health checks, operating at different network layers to provide scalability and fault tolerance.
+> A load balancer distributes incoming network traffic across multiple servers to ensure no single server becomes overwhelmed. It provides redundancy, scalability, and improved system reliability.
 
 # Load Balancer
 
-A load balancer distributes incoming network traffic across multiple servers to prevent any single server from becoming overwhelmed. It enables horizontal scaling of stateless applications and provides fault tolerance through health monitoring.
+A load balancer distributes incoming network traffic across multiple servers to ensure no single server becomes overwhelmed. It provides redundancy, scalability, and improved system reliability.
 
-## Prerequisites and Benefits
+## Types of Load Balancing
 
-Load balancing requires **stateless application servers** where state is pushed to dedicated services like databases and file stores. This enables:
-- **Increased capacity**: Multiple servers handle more concurrent requests
-- **Fault tolerance**: Failed servers are removed from the pool
-- **Improved availability**: Theoretical availability = 1 - (product of server failure rates)
+**DNS Load Balancing**: Simple approach adding multiple server IPs as DNS records. Clients pick one server, but lacks fault tolerance since DNS continues routing to failed servers. Mainly used for routing traffic across data centers.
+
+**Network Load Balancing (L4)**: Operates at TCP layer with virtual IPs (VIPs) mapped to server pools. Supports TCP termination and direct server return optimization. Very fast but limited to TCP-level features. Examples: AWS Network Load Balancer, Azure Load Balancer.
+
+**Application Load Balancing (L7)**: HTTP reverse proxies supporting advanced features like TLS termination, rate limiting, sticky sessions, and HTTP connection multiplexing. Lower throughput than L4 but much more feature-rich.
 
 ## Load Balancing Algorithms
 
-**Round Robin**: Distributes requests sequentially across servers
-**Consistent Hashing**: Maps requests to servers using hash functions
-**Load-Based**: Considers server load, but can cause surprising behavior when servers report zero load
-**Randomized Least Loaded**: Randomizes requests across least loaded servers for optimal results
+- **Round Robin**: Simple rotation through servers
+- **Consistent Hashing**: Deterministic server selection
+- **Load-based**: Routes based on server load metrics
+- **Randomized Least Loaded**: Randomizes among least loaded servers (often performs best)
 
 ## Service Discovery
 
-Load balancers discover available servers through:
-- **Static configuration**: Manual IP address lists (difficult to maintain)
-- **Dynamic discovery**: Using coordination services like Zookeeper or etcd
-- **Auto-scaling integration**: Automatic server addition/removal based on load
+Load balancers discover server pools through:
+- Static configuration files (painful to maintain)
+- Dynamic discovery using Zookeeper or etcd
+- Auto-scaling integration in cloud providers
 
 ## Health Checks
 
-**Passive**: Piggybacks on existing requests, detecting timeouts or 503 errors
-**Active**: Dedicated `/health` endpoints polled by load balancers
-- Can perform simple OK responses or sophisticated resource checks
-- **Critical consideration**: Bugs in health endpoints can bring down entire applications
+**Passive**: Piggybacks on existing requests, detecting failures through timeouts or 503 errors.
 
-## Implementation Types
+**Active**: Dedicated `/health` endpoints polled by load balancers. Can perform simple OK responses or sophisticated resource checks.
 
-### DNS Load Balancing
-Adds multiple server IPs as DNS records. **Limitation**: Lacks fault tolerance due to DNS caching delays.
+## Availability Benefits
 
-### Network Load Balancing (L4)
-Operates at TCP layer with Virtual IPs (VIPs):
-- Very fast performance
-- Supports TCP termination and direct server return
-- Limited to TCP-level features
+Theoretical availability = 1 - (product of server failure rates). Two 99% available servers = 99.99% availability. However, this assumes independent failures and doesn't account for detection delays or cascading failures.
 
-### Application Load Balancing (L7)
-HTTP reverse proxies offering advanced features:
-- HTTP connection multiplexing
-- TLS termination
-- Rate limiting and sticky sessions
-- **Trade-off**: Lower throughput than L4 balancers
+## Sidecar Proxy Pattern
 
-### Sidecar Proxy Pattern
-L7 load balancer instances run on client machines, forming a service mesh. **Advantage**: Eliminates single point of failure. **Disadvantage**: Requires control plane management.
-
-Load balancers are essential for [[System Scaling]] and work alongside [[Caching]] and [[Content Delivery Network]]s to handle massive traffic loads.
+Service mesh approach where each application has a local L7 load balancer, delegating load balancing to clients and avoiding single points of failure.
 
 ---
-*Related: [[System Scaling]], [[Horizontal Scaling]], [[Caching]], [[Service Discovery]], [[Health Checks]]*
+*Related: [[System Scaling]], [[Content Delivery Network]], [[Horizontal Scaling]], [[Multi-Data Center Setup]]*
